@@ -20,6 +20,7 @@ namespace BetterCrabPots
     {
         private ModConfig Config;
         private float[] RandomFloats;
+        private bool LogToConsole = false;
 
         private WeightedGeneric<int>[] Quality;
         internal static MersenneTwister Twister { get; private set; }
@@ -32,7 +33,9 @@ namespace BetterCrabPots
             this.RandomFloats = new float[256];
             ModEntry.Twister = new MersenneTwister();
             this.RandomFloats.FillFloats();
-           
+
+            this.LogToConsole = this.Config.LogToConsole;
+
             TimeEvents.AfterDayStarted += TimeEvents_AfterDayStarted;
         }
         
@@ -50,16 +53,16 @@ namespace BetterCrabPots
                             if (locationObject.Value.heldObject.Value.Category != StardewValley.Object.junkCategory)
                             {
                                 locationObject.Value.heldObject.Value.Quality = DetermineQuality();
-                                this.Monitor.Log(string.Format("Updated {0} to quality {1}.", locationObject.Value.heldObject.Value.Name, Enum.GetName(typeof(QualityIDs), locationObject.Value.heldObject.Value.Quality)));
+                                if (LogToConsole) {this.Monitor.Log(string.Format("Updated {0} to quality {1}.", locationObject.Value.heldObject.Value.Name, Enum.GetName(typeof(QualityIDs), locationObject.Value.heldObject.Value.Quality)));}
                             }
                             else
                             {
-                                this.Monitor.Log(string.Format("Skipped junk item {0}.", locationObject.Value.heldObject.Value.Name));
+                                if (LogToConsole) {this.Monitor.Log(string.Format("Skipped junk item {0}.", locationObject.Value.heldObject.Value.Name));}
                             }
                         }
                         else
                         {
-                            this.Monitor.Log("Skipping empty crabpot.");
+                            if (LogToConsole) {this.Monitor.Log("Skipping empty crabpot.");}
                         }
                     }                    
                 }
@@ -75,7 +78,7 @@ namespace BetterCrabPots
 
         private WeightedGeneric<int>[] GetDailyQuality() {
             double gameDailyLuck = Game1.dailyLuck * 100;
-            this.Monitor.Log(string.Format("Daily Luck is {0}.", (int)gameDailyLuck));
+            if (LogToConsole) {this.Monitor.Log(string.Format("Daily Luck is {0}.", (int)gameDailyLuck));}
 
             List<Framework.WeightedQuality> qualityList;
 
@@ -119,31 +122,5 @@ namespace BetterCrabPots
 
             return quality;
         }
-        
-
-        //public static int GetQuality(List<WeightedQuality> weightedQualities)
-        //{
-        //    int totalWeight = 0;
-        //    foreach (WeightedQuality weightedQuality in weightedQualities)
-        //    {
-        //        totalWeight += weightedQuality.Weight;
-        //    }
-        //    // totalWeight is the sum of all qualities' weight
-        //    int randomNumber = _rnd.Next(0, totalWeight);
-
-        //    WeightedQuality selectedQuality = null;
-        //    foreach (WeightedQuality weightedQuality in weightedQualities)
-        //    {
-        //        if (randomNumber < weightedQuality.Weight)
-        //        {
-        //            selectedQuality = weightedQuality;
-        //            break;
-        //        }
-        //        randomNumber = randomNumber - weightedQuality.Weight;
-        //    }
-        //    return (int)System.Enum.Parse(typeof(QualityIDs), selectedQuality.Quality, true) + 1;
-        //} 
     }
-
-
 }
