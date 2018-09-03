@@ -14,7 +14,7 @@ namespace BetterCrabPots.Framework
         private List<WeightedQuality> _qualityWeightsPeturbed;
         private List<WeightedQuality> _qualityWeightsVeryDispleased;
 
-        public bool LogToConsole = true;
+        public bool LogToConsole = false;
         public List<WeightedQuality> QualityWeightsGoodFortune
         {
             get { return _qualityWeightsGoodFortune; }
